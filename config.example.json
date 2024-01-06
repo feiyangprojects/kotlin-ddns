@@ -1,0 +1,38 @@
+{
+  "mode": "oneshot",
+  "interval": 0,
+  "records": [
+    {
+      "type": "basic",
+      "name": "www.example.org",
+      "address": {
+        "type": "basic",
+        "endpoint": "https://v4.api.example.net/ip"
+      },
+      "username": "www.example.org",
+      "password": "password",
+      "endpoint": "https://dns.example.net/nic/update",
+      "name_parameter": "hostname",
+      "address_parameter": "myip",
+      "other_parameters": {
+        "token": "12345678-1234-1234-1234-1234567890abcd"
+      }
+    },
+    {
+      "type": "basic",
+      "name": "www.example.org",
+      "address": {
+        "type": "regex",
+        "pattern": "^2001:db8:.+"
+      },
+      "username": "www.example.org",
+      "password": "password",
+      "endpoint": "https://dns.example.net/nic/update",
+      "name_parameter": "hostname",
+      "address_parameter": "myip6",
+      "other_parameters": {
+        "myip": "preserve"
+      }
+    }
+  ]
+}
