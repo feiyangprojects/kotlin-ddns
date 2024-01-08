@@ -1,0 +1,44 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+    tags:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+      - name: Build Java Archive
+        run: |
+          chmod +x gradlew
+          ./gradlew jar
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: jar
+          path: app/build/libs/**/*
+      - name: Publish release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          cd app/build/libs
+          gh release create --title "Release ${{ github.ref_name }}" "${{ github.ref_name }}" *
